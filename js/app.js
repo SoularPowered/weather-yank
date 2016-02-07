@@ -16,6 +16,9 @@ All javascript I wrote is in app.js for this assignment
 let apiKey = "fa7d80c48643dfadde2cced1b1be6ca1";
 let data = {};
 
+/*  
+ *  Bind the various buttons on the page to specific events.
+ */
 function bindButtons() {
     // Bind reload() to the reset the page button
     document.getElementById("reset-page-btn").addEventListener('click', function(event){
@@ -39,44 +42,51 @@ function bindButtons() {
         
         // Send the GET request with the zip code
         queryServer(queryString);
-    })    
-    
+    })      
 }
 
 
-function queryServer(qstring, type) {
+/*  
+ *  query the openweathermap.org server using the qstring passed (which is appended to other
+ *  pieces not input by users)
+ */
+function queryServer(qstring) {
     let req = new XMLHttpRequest();
 
     // Build the first part of the query string
     let queryString = "q=" + qstring + "&appid=" + apiKey + "&units=imperial";
 
     // Send the GET request with the zip code
-    req.open("GET", "http://api.openweathermap.org/data/2.5/weather?" + queryString, false);
-    req.send(null);
-//    event.preventDefault(); // Stops submit button from reloading page
-
-    data = JSON.parse(req.responseText);
-
-    // Make sure we got a valid code in the response object before trying to update page
-    if (data.cod != "404") {
-        hideErrorMessage();
-        console.log(data);
-
-        console.log("The object returned contains these properties: ");
-        for (let property in data) {
-            console.log(property);
-        }
-        displayWeatherInfo(data);
-    }
+    req.open("GET", "http://api.openweathermap.org/data/2.5/weather?" + queryString, true);
     
-    // Display an error message and clear the form input if failure
-    else {
-        displayErrorMessage("The server did not find any data for that entry");
-        document.forms["zip-form"].reset();
-        document.forms["city-state-form"].reset();
-    }    
+    req.addEventListener('load', function(){
+        data = JSON.parse(req.responseText);
+        
+        // Make sure we got a valid code in the response object before trying to update page
+        if(req.status >= 200 && req.status < 400) {
+            hideErrorMessage();
+            console.log(data); // For debug purposes
+            displayWeatherInfo(data);
+        
+        // Display an error message and clear the form input if failure
+        } else {
+            if (data.cod == "404") {
+                displayErrorMessage("The server did not find any data for that entry");
+            } else {
+                displayErrorMessage("Some unknown error occured.");
+            }
+            document.forms["zip-form"].reset();
+            document.forms["city-state-form"].reset();
+        }
+    });
+    
+    req.send(null);  
 }
 
+
+/*  
+ * Displays the results-panel div and updates its content
+ */
 function displayWeatherInfo(info) {
     console.log(data.name);
     let resultsPanel = document.getElementById("results-panel");
@@ -90,16 +100,28 @@ function displayWeatherInfo(info) {
     document.getElementById("city-name").textContent = data.name;
 }
 
+
+/*  
+ *  Shows the error panel div and sets the content to msg
+ */
 function displayErrorMessage(msg) {
     hideWeatherInfo();
     document.getElementById("error-panel").removeAttribute("hidden");
     document.getElementById("error-message").textContent = msg;
 }
 
+
+/*  
+ *  Hides the error-panel div
+ */
 function hideErrorMessage() {
     document.getElementById("error-panel").setAttribute("hidden", "");
 }
 
+
+/*  
+ *  Hides teh results-panel div
+ */
 function hideWeatherInfo() {
     document.getElementById("results-panel").setAttribute("hidden", "");
 }
