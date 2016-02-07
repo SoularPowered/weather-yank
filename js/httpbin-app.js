@@ -6,16 +6,11 @@ Assignment: Week6
 
 Note: Using the Bootstrap basic template for the HTML framework.
 Source: http://getbootstrap.com/getting-started/#template
-All javascript I wrote is in weather-app.js for this assignment
+All javascript I wrote is in httpbin-app.js for this assignment.
 I did not use JQUERY or anything other than pure Javascript
 */
 
-
-
 "use strict";
-
-let apiKey = "fa7d80c48643dfadde2cced1b1be6ca1";
-let data = {};
 
 /*  
  *  Bind the various buttons on the page to specific events.
@@ -27,23 +22,37 @@ function bindButtons() {
         location.reload();
     });
     
-    // Bind the submit button for zip form with specific logic
-    document.getElementById('zip-submit').addEventListener('click', function(event){
+    // Bind the submit button for json-form with specific logic
+    document.getElementById('json-form-submit').addEventListener('click', function(event){
         event.preventDefault(); // Stops submit button from reloading page
-        let queryString = document.getElementById("zip-code").value + ",us";
+        
+        // Get the input from the forms and build an object form the key/value pairs
+        let jsonObjectKeys = buildArrayFromForm("key", 3);
+        let jsonObjectValues = buildArrayFromForm("value", 3);
+        let jsonObject = {};
+        
+        // Iterate over each of the keys and add the corresponding value
+        for (let i = 0; i < jsonObjectKeys.length; i++) {
+            jsonObject[String(jsonObjectKeys[i])] = jsonObjectValues[i];
+        }
         
         // Send the GET request with the zip code
-        queryServer(queryString);
-    })
-    
-    // Bind the submit button for city/state form with specific logic
-    document.getElementById('city-state-submit').addEventListener('click', function(event){
-        event.preventDefault(); // Stops submit button from reloading page
-        let queryString = document.getElementById("city-name").value + "," + document.getElementById("state-code").value;
-        
-        // Send the GET request with the zip code
-        queryServer(queryString);
-    })      
+        queryServer(jsonObject);
+    }) 
+}
+
+/*  
+ *  Builds an array of values from from fiels with the label format:
+ *  label-i-input
+ *  Where i is a number from 1 to qty.
+ *  The form input field must have an id that matches this constructed label
+ */
+function buildArrayFromForm(label, qty) {
+    let keys = new Array();
+    for (let i = 1; i <= qty; i++) {
+        keys.push(document.getElementById(label + i + "-input").value);
+    }
+    return keys;
 }
 
 
@@ -51,54 +60,54 @@ function bindButtons() {
  *  query the openweathermap.org server using the qstring passed (which is appended to other
  *  pieces not input by users)
  */
-function queryServer(qstring) {
+function queryServer(obj) {
     let req = new XMLHttpRequest();
-
-    // Build the first part of the query string
-    let queryString = "q=" + qstring + "&appid=" + apiKey + "&units=imperial";
-
+    
     // Send the GET request with the zip code
-    req.open("GET", "http://api.openweathermap.org/data/2.5/weather?" + queryString, true);
+    req.open("POST", "http://httpbin.org/post", true);
+    req.setRequestHeader('Content-type', 'application/json');
     
     req.addEventListener('load', function(){
-        data = JSON.parse(req.responseText);
+        let response = JSON.parse(req.responseText);
         
         // Make sure we got a valid code in the response object before trying to update page
         if(req.status >= 200 && req.status < 400) {
             hideErrorMessage();
-            console.log(data); // For debug purposes
-            displayWeatherInfo(data);
+            console.log(response); // For debug purposes
+            displayJSONResponse(response);
         
         // Display an error message and clear the form input if failure
         } else {
-            if (data.cod == "404") {
-                displayErrorMessage("The server did not find any data for that entry");
+            if (response.cod == "404") {
+                displayErrorMessage("The server did not send a response for that entry");
             } else {
                 displayErrorMessage("Some unknown error occured.");
             }
-            document.forms["zip-form"].reset();
-            document.forms["city-state-form"].reset();
+            document.forms["json-form"].reset();
         }
     });
     
-    req.send(null);  
+    req.send(JSON.stringify(obj));  
 }
 
 
 /*  
  * Displays the results-panel div and updates its content
  */
-function displayWeatherInfo(info) {
-    console.log(data.name);
+function displayJSONResponse(response) {
+    console.log(response.name);
     let resultsPanel = document.getElementById("results-panel");
     resultsPanel.removeAttribute("hidden");
     
-    document.getElementById("gen-description").textContent = data.weather[0].description;
-    document.getElementById("city").textContent = data.name;
-    document.getElementById("current-temp").textContent = data.main.temp;
-    document.getElementById("humidity").textContent = data.main.humidity + "%";
-    document.getElementById("wind-speed").textContent = data.wind.speed + " miles per hour";
-    document.getElementById("city-name").textContent = data.name;
+    // Print the object to the page, first as a literal string, then broken down again
+    document.getElementById("json-string-response").textContent = response.data;
+    let obj = JSON.parse(response.data);
+    let i = 1;
+    for (let property in obj) {
+        document.getElementById("key" + i + "-response").textContent = property;
+        document.getElementById("value" + i + "-response").textContent = obj[property];
+        i++;
+    }    
 }
 
 
@@ -121,7 +130,7 @@ function hideErrorMessage() {
 
 
 /*  
- *  Hides teh results-panel div
+ *  Hides the results-panel div
  */
 function hideWeatherInfo() {
     document.getElementById("results-panel").setAttribute("hidden", "");
@@ -130,9 +139,3 @@ function hideWeatherInfo() {
 
 // I'm using the simple design pattern at http://eecs.oregonstate.edu/ecampus-video/CS290/core-content/ajax-forms/js-forms.html to add the event listener once DOm is loaded and bind the buttons, etc.
 document.addEventListener('DOMContentLoaded', bindButtons);
-
-
-// data.weather[0].description  retreives a short description
-// data.coord.lon  data.coord.lat   --> longitude and latitude
-// data.wind.speed
-// data.name -- gives county
