@@ -29,9 +29,10 @@ All javascript I wrote is in app.js for this assignment
   </head>
   <body>
     <div class="container">
-    <h1>Weather Retrieval Tool</h1>
+    <h1>Weather Query Tool</h1>
 
     <p>Enter a ZIP code or a City and state and press submit for some information about the weather there.</p>
+        <p><button type="reset" class="btn btn-danger" id="reset-page-btn">Reset the Page</button></p>
     <h2>Entry Forms</h2>
     <div class="row"> <!-- START forms row -->
         <div class="col-md-6">
@@ -68,16 +69,19 @@ All javascript I wrote is in app.js for this assignment
     <div class="row" id="results-panel" hidden> <!-- START output row -->
         <div class="col-md-12">
         <h2>Weather Information</h2>
-            <p>The weather for <span id="city"></span> is currently:</p>
+            <p>The current weather for <span id="city"></span> is <span id="gen-description"></span></p>
             <ul>
-                <li>Current Temperature: <span id="current-temp"></span></li>
+                <li>Temperature: <span id="current-temp"></span>&#x2109;</li>
                 <li>Humidity: <span id="humidity"></span></li>
                 <li>Wind Speed: <span id="wind-speed"></span></li>
             </ul>
         </div>
     </div> <!-- END output row -->   
-        
-        
+    <div class="row" id="error-panel" hidden>
+        <div class="col-md-12">
+            <p class="bg-danger">There was an error: <span id="error-message"></span></p>
+        </div> <!-- END error panel -->   
+    </div> <!-- END error row -->           
     </div> <!-- END main container -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
