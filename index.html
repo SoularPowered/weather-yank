@@ -32,17 +32,46 @@ All javascript I wrote is in app.js for this assignment
     <h1>Weather Retrieval Tool</h1>
 
     <p>Enter a ZIP code or a City and state and press submit for some information about the weather there.</p>
-      
-    <form> <!-- BEGIN ZIP form -->
-        <fieldset>
-        <legend>Weather by ZIP</legend>
-            <label for="zipCode">ZipCode:</label>
-            <input type="text" name="zipCode" id="zip-code">
-            <input type="submit" id="zip-submit">
-        </fieldset>
-    </form><!-- END ZIP form -->
-      
-          
+    <h2>Entry Forms</h2>
+    <div class="row"> <!-- START forms row -->
+        <div class="col-md-6">
+        <form class="form-inline"> <!-- BEGIN ZIP form -->
+            <fieldset>
+            <legend>Weather by ZIP Code</legend>
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code:</label>
+                    <input type="text" class="form-control" name="zipCode" id="zip-code" placeholder="Five-digit ZIP Code">
+                </div>
+                <input type="submit" class="btn btn-primary" id="zip-submit">
+            </fieldset>
+        </form><!-- END ZIP form -->
+        </div><!-- END left col -->
+
+        <div class="col-md-6">
+        <form class="form-inline"> <!-- BEGIN city form -->
+            <fieldset>
+            <legend>Weather by U.S. City and State</legend>
+                <div class="form-group">
+                    <label for="cityName">City:</label>
+                    <input type="text" class="form-control" name="cityName" id="city-name" placeholder="City Name">
+                </div>
+                <div class="form-group">
+                    <label for="stateAbbrev">State</label>
+                    <input type="text" class="form-control" name="stateAbbrev" id="state-code" placeholder="Two-letter state abbreviation">
+                </div>
+                <input type="submit" class="btn btn-primary" id="cityState-submit">
+            </fieldset>
+        </form><!-- END city form -->
+        </div><!-- END right col -->
+    </div><!-- END form row -->
+    
+    <div class="row"> <!-- START output row -->
+        <div class="col-md-12" hidden="false">
+        <h2>Weather Information</h2>
+        </div>
+    </div> <!-- END output row -->   
+        
+        
     </div> <!-- END main container -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

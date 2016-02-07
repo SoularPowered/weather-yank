@@ -36,9 +36,10 @@ function bindButtons() {
             console.log(property);
         }
         
-        updateWeatherInfo(data);
-        
         event.preventDefault(); // prevent page from reloading on click of form submit button
+        
+        updateWeatherInfo(data);
+              
     })
 }
 
