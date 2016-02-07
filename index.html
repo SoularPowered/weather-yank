@@ -15,7 +15,7 @@ All javascript I wrote is in app.js for this assignment
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Weather Query</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -28,8 +28,22 @@ All javascript I wrote is in app.js for this assignment
     <![endif]-->
   </head>
   <body>
-    <h1>Weather app</h1>
+    <div class="container">
+    <h1>Weather Retrieval Tool</h1>
 
+    <p>Enter a ZIP code or a City and state and press submit for some information about the weather there.</p>
+      
+    <form> <!-- BEGIN ZIP form -->
+        <fieldset>
+        <legend>Weather by ZIP</legend>
+            <label for="zipCode">ZipCode:</label>
+            <input type="text" name="zipCode" id="zip-code">
+            <input type="submit" id="zip-submit">
+        </fieldset>
+    </form><!-- END ZIP form -->
+      
+          
+    </div> <!-- END main container -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
