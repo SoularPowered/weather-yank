@@ -33,10 +33,13 @@ All javascript I wrote is in app.js for this assignment
 
     <p>Enter a ZIP code or a City and state and press submit for some information about the weather there.</p>
         <p><button type="reset" class="btn btn-danger" id="reset-page-btn">Reset the Page</button></p>
+        
     <h2>Entry Forms</h2>
+    
+    <!-- ZIP CODE BASED FORM -->
     <div class="row"> <!-- START forms row -->
         <div class="col-md-6">
-        <form class="form-inline"> <!-- BEGIN ZIP form -->
+        <form class="form-inline" id="zip-form"> <!-- BEGIN ZIP form -->
             <fieldset>
             <legend>Weather by ZIP Code</legend>
                 <div class="form-group">
@@ -48,8 +51,10 @@ All javascript I wrote is in app.js for this assignment
         </form><!-- END ZIP form -->
         </div><!-- END left col -->
 
+        
+        <!-- CITY/STATE BASED FORM -->
         <div class="col-md-6">
-        <form class="form-inline"> <!-- BEGIN city form -->
+        <form class="form-inline" id="city-state-form"> <!-- BEGIN city form -->
             <fieldset>
             <legend>Weather by U.S. City and State</legend>
                 <div class="form-group">
@@ -60,23 +65,28 @@ All javascript I wrote is in app.js for this assignment
                     <label for="stateAbbrev">State</label>
                     <input type="text" class="form-control" name="stateAbbrev" id="state-code" placeholder="Two-letter state abbreviation">
                 </div>
-                <input type="submit" class="btn btn-primary" id="cityState-submit">
+                <input type="submit" class="btn btn-primary" id="city-state-submit">
             </fieldset>
         </form><!-- END city form -->
         </div><!-- END right col -->
     </div><!-- END form row -->
     
+        
+    <!-- Panel to show the weather information on success -->
     <div class="row" id="results-panel" hidden> <!-- START output row -->
         <div class="col-md-12">
         <h2>Weather Information</h2>
-            <p>The current weather for <span id="city"></span> is <span id="gen-description"></span></p>
+            <p>The most currently reported weather from openweathermap.org for <span id="city"></span> is <span id="gen-description"></span></p>
             <ul>
                 <li>Temperature: <span id="current-temp"></span>&#x2109;</li>
                 <li>Humidity: <span id="humidity"></span></li>
                 <li>Wind Speed: <span id="wind-speed"></span></li>
             </ul>
         </div>
-    </div> <!-- END output row -->   
+    </div> <!-- END output row -->
+        
+        
+    <!-- Panel to show error message on failure -->        
     <div class="row" id="error-panel" hidden>
         <div class="col-md-12">
             <p class="bg-danger">There was an error: <span id="error-message"></span></p>

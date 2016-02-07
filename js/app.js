@@ -23,56 +23,70 @@ function bindButtons() {
         location.reload();
     });
     
+    // Bind the submit button for zip form with specific logic
     document.getElementById('zip-submit').addEventListener('click', function(event){
-        let req = new XMLHttpRequest();
-
-        // Build the first part of the query string
-        let queryString = "q=" + document.getElementById("zip-code").value + ",us" + "&appid=" + apiKey + "&units=imperial";
-        
+        event.preventDefault(); // Stops submit button from reloading page
+        let queryString = document.getElementById("zip-code").value + ",us";
         
         // Send the GET request with the zip code
-        req.open("GET", "http://api.openweathermap.org/data/2.5/weather?" + queryString, false);
-        req.send(null);
-        event.preventDefault(); // Stops submit button from reloading page
-        
-        data = JSON.parse(req.responseText);
-        
-        // Make sure we got a valid code in the response object before trying to update page
-        if (data.cod != "404") {
-            hideErrorMessage();
-            console.log(data);
-
-            console.log("The object returned contains these properties: ");
-            for (let property in data) {
-                console.log(property);
-            }
-            displayWeatherInfo(data);
-        }
-        else {
-            displayErrorMessage("The server did not find any data for that entry");
-        }
-              
+        queryServer(queryString);
     })
+    
+    // Bind the submit button for city/state form with specific logic
+    document.getElementById('city-state-submit').addEventListener('click', function(event){
+        event.preventDefault(); // Stops submit button from reloading page
+        let queryString = document.getElementById("city-name").value + "," + document.getElementById("state-code").value;
+        
+        // Send the GET request with the zip code
+        queryServer(queryString);
+    })    
+    
 }
 
+
+function queryServer(qstring, type) {
+    let req = new XMLHttpRequest();
+
+    // Build the first part of the query string
+    let queryString = "q=" + qstring + "&appid=" + apiKey + "&units=imperial";
+
+    // Send the GET request with the zip code
+    req.open("GET", "http://api.openweathermap.org/data/2.5/weather?" + queryString, false);
+    req.send(null);
+//    event.preventDefault(); // Stops submit button from reloading page
+
+    data = JSON.parse(req.responseText);
+
+    // Make sure we got a valid code in the response object before trying to update page
+    if (data.cod != "404") {
+        hideErrorMessage();
+        console.log(data);
+
+        console.log("The object returned contains these properties: ");
+        for (let property in data) {
+            console.log(property);
+        }
+        displayWeatherInfo(data);
+    }
+    
+    // Display an error message and clear the form input if failure
+    else {
+        displayErrorMessage("The server did not find any data for that entry");
+        document.forms["zip-form"].reset();
+        document.forms["city-state-form"].reset();
+    }    
+}
 
 function displayWeatherInfo(info) {
     console.log(data.name);
     let resultsPanel = document.getElementById("results-panel");
     resultsPanel.removeAttribute("hidden");
     
-    // City
+    document.getElementById("gen-description").textContent = data.weather[0].description;
     document.getElementById("city").textContent = data.name;
-    
-    // Current Temperature
     document.getElementById("current-temp").textContent = data.main.temp;
-    
-    // Humidity
     document.getElementById("humidity").textContent = data.main.humidity + "%";
-    
-    // Wind Speed
     document.getElementById("wind-speed").textContent = data.wind.speed + " miles per hour";
-    
     document.getElementById("city-name").textContent = data.name;
 }
 
