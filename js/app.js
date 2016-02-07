@@ -46,6 +46,23 @@ function bindButtons() {
 
 function updateWeatherInfo(info) {
     console.log(data.name);
+    let resultsPanel = document.getElementById("results-panel");
+    resultsPanel.removeAttribute("hidden");
+    
+    // City
+    document.getElementById("city").textContent = data.name;
+    
+    // Current Temperature
+    document.getElementById("current-temp").textContent = data.main.temp;
+    
+    
+    // Humidity
+    document.getElementById("humidity").textContent = data.main.humidity + "%";
+    
+    // Wind Speed
+    document.getElementById("wind-speed").textContent = data.wind.speed;
+    
+    document.getElementById("city-name").textContent = data.name;
 }
 
 

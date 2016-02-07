@@ -65,9 +65,15 @@ All javascript I wrote is in app.js for this assignment
         </div><!-- END right col -->
     </div><!-- END form row -->
     
-    <div class="row"> <!-- START output row -->
-        <div class="col-md-12" hidden="false">
+    <div class="row" id="results-panel" hidden> <!-- START output row -->
+        <div class="col-md-12">
         <h2>Weather Information</h2>
+            <p>The weather for <span id="city"></span> is currently:</p>
+            <ul>
+                <li>Current Temperature: <span id="current-temp"></span></li>
+                <li>Humidity: <span id="humidity"></span></li>
+                <li>Wind Speed: <span id="wind-speed"></span></li>
+            </ul>
         </div>
     </div> <!-- END output row -->   
         
